@@ -1,0 +1,451 @@
+openapi: 3.0.3
+info:
+  title: API de Exemplo da Ficha 4
+  description: Definição exemplificativa de uma API em OpenAPI 3 para a ficha 4 da UC de Programação do curso de Multimédia do ISMT
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: geral@ismt.pt
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Servidor local
+tags:
+  - name: student
+    description: Dados referentes aos alunos do curso
+  - name: teacher
+    description: Dados referentes aos professores das disciplinas
+  - name: subject
+    description: Dados referentes às disciplinas do curso
+paths:
+  /students:
+    get:
+      summary: Obter todos os alunos
+      description: Retorna uma lista de todos os alunos registados.
+      tags:
+        - student
+      responses:
+        '200':
+          description: Uma lista de alunos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '500':
+          description: Erro interno do servidor.
+    post:
+      summary: Criar um novo aluno
+      description: Adiciona um novo aluno à lista.
+      tags:
+        - student
+      requestBody:
+        description: Dados do aluno a ser criado.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: Aluno criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: Dados do aluno inválidos.
+        '500':
+          description: Erro interno do servidor.
+  /students/{id}:
+    get: # Added for completeness of Student CRUD by ID
+      summary: Obter um aluno por ID
+      description: Retorna um aluno específico pelo seu ID.
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do aluno a ser obtido.
+      responses:
+        '200':
+          description: Dados do aluno.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: ID inválido.
+        '404':
+          description: Aluno não encontrado.
+        '500':
+          description: Erro interno do servidor.
+    put:
+      summary: Atualizar um aluno existente
+      description: Atualiza os dados de um aluno específico pelo seu ID.
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do aluno a ser atualizado.
+      requestBody:
+        description: Novos dados do aluno.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Aluno atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          description: ID inválido ou dados do aluno inválidos.
+        '404':
+          description: Aluno não encontrado.
+        '500':
+          description: Erro interno do servidor.
+    delete:
+      summary: Eliminar um aluno
+      description: Elimina um aluno específico pelo seu ID.
+      tags:
+        - student
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do aluno a ser eliminado.
+      responses:
+        '204':
+          description: Aluno eliminado com sucesso (sem conteúdo de retorno).
+        '400':
+          description: ID inválido.
+        '404':
+          description: Aluno não encontrado.
+        '500':
+          description: Erro interno do servidor.
+
+  /teachers: # CRUD for Teachers (all)
+    get:
+      summary: Obter todos os professores
+      description: Retorna uma lista de todos os professores registados.
+      tags:
+        - teacher
+      responses:
+        '200':
+          description: Uma lista de professores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        '500':
+          description: Erro interno do servidor.
+    post:
+      summary: Criar um novo professor
+      description: Adiciona um novo professor à lista.
+      tags:
+        - teacher
+      requestBody:
+        description: Dados do professor a ser criado.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        '201':
+          description: Professor criado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: Dados do professor inválidos.
+        '500':
+          description: Erro interno do servidor.
+  /teachers/{id}: # CRUD for Teachers (by ID)
+    get:
+      summary: Obter dados de um professor
+      description: Retorna os dados de um professor específico pelo seu ID.
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do professor a ser obtido.
+      responses:
+        '200':
+          description: Dados do professor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: ID inválido.
+        '404':
+          description: Professor não encontrado.
+        '500':
+          description: Erro interno do servidor.
+    put:
+      summary: Atualizar um professor existente
+      description: Atualiza os dados de um professor específico pelo seu ID.
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do professor a ser atualizado.
+      requestBody:
+        description: Novos dados do professor.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+      responses:
+        '200':
+          description: Professor atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '400':
+          description: ID inválido ou dados do professor inválidos.
+        '404':
+          description: Professor não encontrado.
+        '500':
+          description: Erro interno do servidor.
+    delete:
+      summary: Eliminar um professor
+      description: Elimina um professor específico pelo seu ID.
+      tags:
+        - teacher
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do professor a ser eliminado.
+      responses:
+        '204':
+          description: Professor eliminado com sucesso (sem conteúdo de retorno).
+        '400':
+          description: ID inválido.
+        '404':
+          description: Professor não encontrado.
+        '500':
+          description: Erro interno do servidor.
+
+  /subjects: # CRUD for Subjects (all)
+    get:
+      summary: Obter todas as disciplinas
+      description: Retorna uma lista de todas as disciplinas registadas.
+      tags:
+        - subject
+      responses:
+        '200':
+          description: Uma lista de disciplinas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subject'
+        '500':
+          description: Erro interno do servidor.
+    post:
+      summary: Criar uma nova disciplina
+      description: Adiciona uma nova disciplina à lista.
+      tags:
+        - subject
+      requestBody:
+        description: Dados da disciplina a ser criada.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        '201':
+          description: Disciplina criada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: Dados da disciplina inválidos.
+        '500':
+          description: Erro interno do servidor.
+  /subjects/{id}: # CRUD for Subjects (by ID)
+    get:
+      summary: Obter uma disciplina por ID
+      description: Retorna uma disciplina específica pelo seu ID.
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID da disciplina a ser obtida.
+      responses:
+        '200':
+          description: Dados da disciplina.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: ID inválido.
+        '404':
+          description: Disciplina não encontrada.
+        '500':
+          description: Erro interno do servidor.
+    put:
+      summary: Atualizar uma disciplina existente
+      description: Atualiza os dados de uma disciplina específica pelo seu ID.
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID da disciplina a ser atualizada.
+      requestBody:
+        description: Novos dados da disciplina.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        '200':
+          description: Disciplina atualizada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '400':
+          description: ID inválido ou dados da disciplina inválidos.
+        '404':
+          description: Disciplina não encontrada.
+        '500':
+          description: Erro interno do servidor.
+    delete:
+      summary: Eliminar uma disciplina
+      description: Elimina uma disciplina específica pelo seu ID.
+      tags:
+        - subject
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID da disciplina a ser eliminada.
+      responses:
+        '204':
+          description: Disciplina eliminada com sucesso (sem conteúdo de retorno).
+        '400':
+          description: ID inválido.
+        '404':
+          description: Disciplina não encontrada.
+        '500':
+          description: Erro interno do servidor.
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Chave primária da entidade aluno
+          example: 1
+        name:
+          type: string
+          description: Nome completo do aluno
+          example: Carlos Silva
+        address:
+          type: string
+          description: Morada fiscal do aluno
+          example: Rua A
+        nif:
+          type: integer
+          description: NIF do aluno
+          example: 123456789
+        subjects:
+          type: array
+          description: Todas as disciplinas a que o aluno se encontra inscrito
+          items:
+            $ref: '#/components/schemas/Subject' # Reference to the Subject schema
+    Teacher: 
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Chave primária do professor
+          example: 1
+        name:
+          type: string
+          description: Nome do professor
+          example: Maria Sousa
+        email:
+          type: string
+          description: Endereço de email do professor
+          example: maria@ismt.pt
+        subjects:
+          type: array
+          description: Todas as disciplinas que o professor leciona
+          items:
+            $ref: '#/components/schemas/Subject' # Reference to the Subject schema
+    Subject: # New Subject schema starts here
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Chave primária da disciplina
+          example: 1
+        name:
+          type: string
+          description: Nome da disciplina
+          example: Matemática
+        totalHours:
+          type: number # Use 'number' for floating-point or integers without explicit integer constraint
+          format: float # 'float' or 'double' can be used here for decimal places, 'float' is a common choice
+          description: Total de horas letivas da disciplina
+          example: 25.0 # Or just 25 if integer is acceptable
+        teacher:
+          type: object
+          description: Professor que leciona a disciplina
+          items:
+            $ref: '#/components/schemas/Teacher' # Reference to the Teacher schema
